@@ -1,6 +1,7 @@
 # alphabet-rewrite-2012
 
 A string rewriting system (L-system) i thought about when i was ~8yo. 
+
 Il s'agit d'un automate où chaque lettre est remplacée par son épellation phonétique à chaque itération (ex: `c` $\rightarrow$ `cé`, `e` $\rightarrow$ `eu`, etc.).
 
 ## 1. Complexité Asymptotique (Croissance des lettres)
