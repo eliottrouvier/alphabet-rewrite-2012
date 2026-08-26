@@ -2,7 +2,15 @@
 
 A string rewriting system (L-system) i thought about when i was ~8yo. 
 
-Il s'agit d'un automate où chaque lettre est remplacée par son épellation phonétique à chaque itération (ex: `c` $\rightarrow$ `cé`, `e` $\rightarrow$ `eu`, etc.).
+Je formalise mathématiquement une intuition d'enfance : un jeu de réécriture basé sur l'orthographe phonétique des lettres de l'alphabet français. 
+
+Je me suis rappelé d'un jeu auquel j'avais joué une après-midi chez mes grand-parents car j'étais puni et obligé de faire mes devoirs pendant les vacances.
+
+En demandant à un LLM je me suis rendu compte que j'avais joué avec un L-système.
+    **Système de Lindenmayer (L-Système)** déterministe, cousin de la célèbre suite de Conway (suite audioactive), révélant une taxonomie de complexité surprenante pour notre alphabet.
+
+
+L'idée de base est de prendre une lettre, de l'épeler phonétiquement, puis de répéter l'opération sur la nouvelle chaîne de caractères générée. 
 
 ## 1. Complexité Asymptotique (Croissance des lettres)
 En appliquant les règles itérativement, on se rend compte que les lettres ne grandissent pas toutes à la même vitesse.
