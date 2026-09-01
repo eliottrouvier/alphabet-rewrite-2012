@@ -17,6 +17,8 @@ rules = {
     'z': 'zède', 'é': 'é', 'è': 'è'
 }
 
+#bon les règles sont très arbitraires car cela dépend de la façon dont on prononce la lettre puis la façon dont on l'écris en interprétant
+
 def strip_accents(s):
     import unicodedata
     s = ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
