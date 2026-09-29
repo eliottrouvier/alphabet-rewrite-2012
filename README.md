@@ -1,62 +1,62 @@
 # alphabet-rewrite-2012
 
-A string rewriting system (L-system) i thought about when i was ~8yo. 
-
-Je formalise mathématiquement une intuition d'enfance : un jeu de réécriture basé sur l'orthographe phonétique des lettres de l'alphabet français. 
-
-Je me suis rappelé d'un jeu auquel j'avais joué une après-midi chez mes grand-parents car j'étais puni et obligé de faire mes devoirs pendant les vacances.
-
-En demandant à un LLM je me suis rendu compte que j'avais joué avec un L-système.
-    **Système de Lindenmayer (L-Système)** déterministe, cousin de la célèbre suite de Conway (suite audioactive), révélant une taxonomie de complexité surprenante pour notre alphabet.
-
-
-L'idée de base est de prendre une lettre, de l'épeler phonétiquement, puis de répéter l'opération sur la nouvelle chaîne de caractères générée. 
-
-## 1. Complexité Asymptotique (Croissance des lettres)
-En appliquant les règles itérativement, on se rend compte que les lettres ne grandissent pas toutes à la même vitesse.
-- **O(1) - Constante** : Les "puits" (lettres terminales comme `a`, `i`, `o`, `u`, `é`, `è`)
-- **O(n) - Linéaire / O(n²) - Quadratique** : Les lettres qui n'entrent pas dans des boucles infinies de rétroaction.
-- **O(2^n) - Exponentielle** : Les lettres qui finissent par générer d'autres lettres exponentielles (ex: `f`, `l`, `m`, `n`, `r`, `s`, `w`, `y`).
-
-![Courbes de croissance](growth_curves.png)
-
-## 2. Heatmap et Matrice d'Adjacence
-Si l'on représente les règles phonétiques sous la forme d'un graphe, on obtient la matrice de transition $26 \times 26$ suivante. Les blocs colorés indiquent les rétroactions et dépendances entre les lettres.
-
-![Heatmap de la matrice de transition](transition_heatmap.png)
-
-## 3. Le Graphe Réseau (Théorie des graphes)
-Chaque lettre est un nœud, chaque règle phonétique crée des arêtes dirigées.
-Ce graphe montre immédiatement :
-- **En vert clair** : Les puits (nœuds terminaux)
-- **En bleu clair** : Les chemins et les cycles. Les cycles (comme la lettre `e` qui génère `e`+`u`) causent l'explosion exponentielle de la chaîne.
-
-![Graphe orienté des transitions](transition_graph.png)
+Un système de réécriture de chaînes (L-système) imaginé vers mes 8 ans, formalisé et simulé en Python.
 
 ---
 
-## 4. Ingénierie Inverse : Mots Stables et "Game of Life"
+## L'idée de base
 
-Si l'axiome de départ n'est pas une simple lettre mais un mot complet, la chaîne subit les mêmes lois.
-Un mot est **stable** s'il ne contient aucune lettre exponentielle (`f`, `l`, `m`, `n`, `r`, `s`, `w`, `y`). Sa croissance restera au maximum polynomiale $O(n^2)$.
+L'idée m'est venue un après-midi chez mes grands-parents alors que j'étais puni et obligé de faire des devoirs de vacances : **prendre une lettre, l'épeler phonétiquement, puis réécrire chaque lettre du mot obtenu avec sa propre prononciation, et répéter le processus à l'infini.**
 
-### Les mots stables les plus longs
-En analysant un dictionnaire français complet (~330 000 mots), les mots **les plus longs** ne provoquant **aucune explosion exponentielle** font 13 lettres de long. Il s'agit de :
-* `caoutchouteux`
-* `hippophagique`
-* `caoutchoutait`
-* `caoutchoutiez`
-* `caoutchoutage`
+En formalisant ce jeu des années plus tard, il s'agit d'un **système de Lindenmayer (L-système)** déterministe, proche de la suite audioactive de Conway.
 
-*(Amusant : la famille de "caoutchouc" domine complètement ce classement !)*
+---
 
-### Le "Game of Life" des mots (Automate Cellulaire)
-Si on aligne les chaînes générées à chaque génération et qu'on assigne une couleur à chaque lettre, on observe des motifs rappelant le "Jeu de la Vie" de Conway.
+## Le principe (exemple avec H)
 
-#### Évolution du mot stable `caoutchouteux`
-Les lettres polynomiales grandissent paisiblement et créent des motifs symétriques (lignes droites et triangles). C'est une croissance maitrisée et prévisible.
-![Game of life - Mot Stable](game_of_life_safe.png)
+Prenons la lettre **H** :
+1. **Étape 0** : `h` (longueur 1)
+2. **Étape 1** : `h` s'épelle "ache" $\rightarrow$ `a c h e` (longueur 4)
+3. **Étape 2** : on réécrit chaque lettre selon sa prononciation :
+   - `a` $\rightarrow$ `a`
+   - `c` $\rightarrow$ `cé`
+   - `h` $\rightarrow$ `ache`
+   - `e` $\rightarrow$ `eu`  
+   Ce qui donne `a cé ache eu` (longueur 9)
+4. **Étape 3** : longueur 16, puis 25, 36...
 
-#### L'explosion du mot `ouf`
-À l'inverse, si l'on prend un mot d'apparence inoffensive comme `ouf`, la présence du `f` (lettre exponentielle) agit comme une "graine" chaotique. En quelques itérations, la structure explose et le motif devient un bruit dense et asymétrique.
-![Game of life - Mot Explosif](game_of_life_explosive.png)
+La suite des longueurs suit exactement la suite des carrés parfaits : **$L_n = (n+1)^2$** (croissance quadratique $O(n^2)$).
+
+---
+
+## Les résultats
+
+### 1. Classification de l'alphabet (4 régimes de croissance)
+
+En appliquant ce système aux 26 lettres de l'alphabet français, on découvre 4 classes de complexité dynamique bien distinctes :
+
+| Régime | Lettres | Comportement |
+|---|---|---|
+| **$O(1)$ — Constant** | **A, I, O, U, É, È** | Lettres terminales / puits : elles ne génèrent qu'elles-mêmes. |
+| **$O(n)$ — Linéaire** | **B, C, D, E, G, J, K, P, Q, T, V** | Croissance régulière pas à pas (ex. $c \rightarrow c\acute{e} \rightarrow c\acute{e}\acute{e}$). |
+| **$O(n^2)$ — Quadratique** | **H, X, Z** | Croissance polynomiale en carré parfait (matrice d'adjacence triangulaire). |
+| **$O(2^n)$ — Exponentiel** | **F, L, M, N, R, S, W, Y** | Explosion combinatoire due à des cycles de rétroaction (ex. $f \rightarrow effe$). |
+
+<p align="center">
+  <img src="growth_curves.png" width="48%" />
+  <img src="transition_graph.png" width="48%" />
+</p>
+
+---
+
+### 2. Mots complets & automate cellulaire ("Game of Life")
+
+En appliquant les règles non plus à une lettre isolée mais à un mot entier :
+
+- **Mots stables** : un mot dont aucune lettre n'est exponentielle a une croissance maîtrisée au plus quadratique. Dans un dictionnaire de 330 000 mots français, les plus longs mots stables font 13 lettres (ex. `caoutchouteux`, `hippophagique`).
+- **Visualisation façon Jeu de la Vie** : chaque lettre est associée à une couleur. Un mot stable comme `caoutchouteux` forme un motif géométrique régulier, tandis qu'un mot contenant une lettre exponentielle comme `ouf` explose rapidement en bruit chaotique.
+
+<p align="center">
+  <img src="game_of_life_safe.png" width="48%" alt="caoutchouteux (stable)" />
+  <img src="game_of_life_explosive.png" width="48%" alt="ouf (explosif)" />
+</p>
