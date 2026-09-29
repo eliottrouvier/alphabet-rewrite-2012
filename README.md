@@ -1,6 +1,7 @@
 # alphabet-rewrite-2012
 
-Un système de réécriture de chaînes (L-système) imaginé vers mes 8 ans, formalisé et simulé en Python.
+> **Tech Stack : Python • Algorithms • Discrete Math • Matplotlib**  
+> Deterministic phonetic string rewriting system (L-system) formalizing recursive letter expansions and sequence dynamics.
 
 ---
 
